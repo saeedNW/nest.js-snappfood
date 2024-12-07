@@ -11,8 +11,8 @@ export class CategoryEntity extends BaseEntity {
 	@Column()
 	image: string;
 	@Column({ nullable: true })
-	// imageKey: string;
-	// @Column()
+	imageKey: string;
+	@Column()
 	show: boolean;
 	@Column({ nullable: true })
 	parentId: number;
