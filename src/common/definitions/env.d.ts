@@ -8,14 +8,20 @@
 namespace NodeJS {
 	interface ProcessEnv {
 		/** Application configuration */
-		SERVER_LINK: string; // Application's Server URL address
-		PORT: number; // Port number for the application
+		SERVER_LINK: string;
+		PORT: number;
 
 		/** Database configuration */
-		DB_PORT: number; // Database server port
-		DB_NAME: string; // Name of the database
-		DB_USERNAME: string; // Database username
-		DB_PASSWORD: string; // Database password
-		DB_HOST: string; // Database host address
+		DB_PORT: number;
+		DB_NAME: string;
+		DB_USERNAME: string;
+		DB_PASSWORD: string;
+		DB_HOST: string;
+
+		/** Liara S3 cloud storage configuration */
+		S3_SECRET_KEY: string;
+		S3_ACCESS_KEY: string;
+		S3_BUCKET_NAME: string;
+		S3_ENDPOINT: string;
 	}
 }
