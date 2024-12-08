@@ -80,8 +80,12 @@ export class CategoryController {
 		return this.categoryService.update(id, filteredData, image);
 	}
 
+	/**
+	 * remove a category
+	 * @param id - category's id number
+	 */
 	@Delete(":id")
-	remove(@Param("id") id: string) {
-		return this.categoryService.remove(+id);
+	remove(@Param("id", ParseIntPipe) id: number) {
+		return this.categoryService.remove(id);
 	}
 }

@@ -154,8 +154,22 @@ export class CategoryService {
 		return "updated successfully";
 	}
 
-	remove(id: number) {
-		return `This action removes a #${id} category`;
+	/**
+	 * remove a category
+	 * @param id - category's id number
+	 */
+	async remove(id: number) {
+		/** Check if category exists */
+		const category = await this.findOneById(id);
+		/** Remove category from database */
+		await this.categoryRepository.delete({ id });
+
+		/** Remove category's image file */
+		if (category?.imageKey) {
+			await this.storageService.deleteFile(category?.imageKey);
+		}
+
+		return "deleted successfully";
 	}
 
 	/**
@@ -169,7 +183,7 @@ export class CategoryService {
 	}
 
 	/**
-	 * retrieve single category by slug
+	 * find single category by slug
 	 * @param {string} slug - category's slug
 	 */
 	async findOneBySlug(slug: string) {
