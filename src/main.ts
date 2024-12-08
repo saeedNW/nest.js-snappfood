@@ -4,6 +4,7 @@ import { HttpExceptionFilter } from "./common/Filters/exception.filter";
 import { UnprocessableEntityPipe } from "./common/pipe/unprocessable-entity.pipe";
 import { ResponseTransformerInterceptor } from "./common/interceptor/response-transformer.interceptor";
 import { swaggerConfiguration } from "./config/swagger.config";
+import * as cookieParser from "cookie-parser";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -19,6 +20,9 @@ async function bootstrap() {
 
 	/** initialize swagger */
 	swaggerConfiguration(app);
+
+	/** Initialize cookie parser */
+	app.use(cookieParser(process.env.COOKIE_SECRET));
 
 	/** Define application PORT number */
 	const PORT: number = process.env.PORT ?? 3000;

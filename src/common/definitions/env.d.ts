@@ -8,6 +8,7 @@
 namespace NodeJS {
 	interface ProcessEnv {
 		/** Application configuration */
+		NODE_ENV: string;
 		SERVER_LINK: string;
 		PORT: number;
 
@@ -23,5 +24,10 @@ namespace NodeJS {
 		S3_ACCESS_KEY: string;
 		S3_BUCKET_NAME: string;
 		S3_ENDPOINT: string;
+
+		/** Secrets */
+		COOKIE_SECRET: string;
+		OTP_TOKEN_SECRET: string;
+		ACCESS_TOKEN_SECRET: string;
 	}
 }
