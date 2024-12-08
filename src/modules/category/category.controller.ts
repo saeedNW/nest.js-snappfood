@@ -7,6 +7,7 @@ import {
 	Param,
 	Delete,
 	UseInterceptors,
+	Query,
 } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import { CreateCategoryDto } from "./dto/create-category.dto";
@@ -15,6 +16,7 @@ import { ApiConsumes } from "@nestjs/swagger";
 import { SwaggerConsumes } from "src/common/enums/swagger-consumes.enum";
 import { UploadFileS3 } from "src/common/interceptor/file-uploader.interceptor";
 import { FileUploader } from "src/common/decorators/file-uploader.decorator";
+import { PaginationDto } from "src/common/dto/pagination.dto";
 import { plainToClass } from "class-transformer";
 
 @Controller("category")
@@ -46,13 +48,13 @@ export class CategoryController {
 	}
 
 	@Get()
-	findAll() {
-		return this.categoryService.findAll();
-	}
+	findAll(@Query() paginationDto: PaginationDto) {
+		/** filter client pagination data and remove unwanted data */
+		const filteredPaginationData = plainToClass(PaginationDto, paginationDto, {
+			excludeExtraneousValues: true,
+		});
 
-	@Get(":id")
-	findOne(@Param("id") id: string) {
-		return this.categoryService.findOne(+id);
+		return this.categoryService.findAll(filteredPaginationData);
 	}
 
 	@Patch(":id")

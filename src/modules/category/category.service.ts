@@ -10,6 +10,9 @@ import { CategoryEntity } from "./entities/category.entity";
 import { Repository } from "typeorm";
 import { StorageService } from "../storage/storage.service";
 import { toBoolean, isBoolean } from "src/common/utils/functions.utils";
+import { PaginationDto } from "src/common/dto/pagination.dto";
+import { paginate, PaginatedResult } from "src/common/utils/pagination.utils";
+import { EntityName } from "src/common/enums/entity-name.enum";
 
 @Injectable()
 export class CategoryService {
@@ -68,12 +71,21 @@ export class CategoryService {
 		return "Created Category successfully";
 	}
 
-	findAll() {
-		return `This action returns all category`;
-	}
+	async findAll(
+		paginationDto: PaginationDto
+	): Promise<PaginatedResult<CategoryEntity>> {
+		/** Generate database query */
+		const queryBuilder = this.categoryRepository
+			.createQueryBuilder(EntityName.CATEGORY)
+			.leftJoin("category.parent", "parent")
+			.addSelect(["parent.title"]);
 
-	findOne(id: number) {
-		return `This action returns a #${id} category`;
+		return await paginate(
+			paginationDto,
+			this.categoryRepository,
+			queryBuilder,
+			process.env.SERVER_LINK + "/category"
+		);
 	}
 
 	update(id: number, updateCategoryDto: UpdateCategoryDto) {
