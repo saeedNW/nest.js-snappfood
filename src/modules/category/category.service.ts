@@ -189,4 +189,23 @@ export class CategoryService {
 	async findOneBySlug(slug: string) {
 		return await this.categoryRepository.findOneBy({ slug });
 	}
+
+	/**
+	 * retrieve single category by slug
+	 * @param {string} slug - category's slug
+	 */
+	async findBySlug(slug: string) {
+		/** Retrieve category data */
+		const category = await this.categoryRepository.findOne({
+			where: { slug },
+			relations: {
+				children: true,
+			},
+		});
+
+		/** Throw error if category was not found */
+		if (!category) throw new NotFoundException("not found this category slug ");
+
+		return { category };
+	}
 }

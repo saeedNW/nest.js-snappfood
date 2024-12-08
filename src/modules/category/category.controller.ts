@@ -59,6 +59,15 @@ export class CategoryController {
 	}
 
 	/**
+	 * retrieve single category by slug
+	 * @param {string} slug - category's slug
+	 */
+	@Get("/by-slug/:slug")
+	findBySlug(@Param("slug") slug: string) {
+		return this.categoryService.findBySlug(slug);
+	}
+
+	/**
 	 * Update category data
 	 * @param id - category id number
 	 * @param updateCategoryDto - new data to be updated
