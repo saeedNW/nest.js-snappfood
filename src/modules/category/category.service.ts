@@ -7,7 +7,7 @@ import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoryEntity } from "./entities/category.entity";
-import { Repository } from "typeorm";
+import { DeepPartial, Repository } from "typeorm";
 import { StorageService } from "../storage/storage.service";
 import { toBoolean, isBoolean } from "src/common/utils/functions.utils";
 import { PaginationDto } from "src/common/dto/pagination.dto";
@@ -71,6 +71,10 @@ export class CategoryService {
 		return "Created Category successfully";
 	}
 
+	/**
+	 * Retrieve all categories
+	 * @param paginationDto - pagination related data
+	 */
 	async findAll(
 		paginationDto: PaginationDto
 	): Promise<PaginatedResult<CategoryEntity>> {
@@ -88,8 +92,66 @@ export class CategoryService {
 		);
 	}
 
-	update(id: number, updateCategoryDto: UpdateCategoryDto) {
-		return `This action updates a #${id} category`;
+	/**
+	 * Update category data
+	 * @param id - category id number
+	 * @param updateCategoryDto - new data to be updated
+	 * @param image - category new image
+	 */
+	async update(
+		id: number,
+		updateCategoryDto: UpdateCategoryDto,
+		image: Express.Multer.File
+	) {
+		/** Extract category data */
+		const { parentId, show, slug, title } = updateCategoryDto;
+
+		/** Check for category existence */
+		const category = await this.findOneById(id);
+
+		/** create a partial version of the category entity */
+		const updateObject: DeepPartial<CategoryEntity> = {};
+
+		if (image) {
+			/** Upload file to cloud storage */
+			const { Location, Key } = await this.storageService.uploadFile(
+				image,
+				"snappfood-image"
+			);
+
+			/** Update category image and image key */
+			updateObject["image"] = Location;
+			updateObject["imageKey"] = Key;
+
+			/** Remove category's old image file */
+			if (category?.imageKey) {
+				await this.storageService.deleteFile(category?.imageKey);
+			}
+		}
+
+		/** Update title and show status if provided */
+		if (title) updateObject["title"] = title;
+		if (show && isBoolean(show)) updateObject["show"] = toBoolean(show);
+
+		/** Update category's parent */
+		if (parentId && !isNaN(parseInt(parentId.toString()))) {
+			const category = await this.findOneById(+parentId);
+			updateObject["parentId"] = category.id;
+		}
+
+		/** Update category's slug value */
+		if (slug) {
+			const category = await this.findOneBySlug(slug);
+			if (category && category.id !== id) {
+				throw new ConflictException("already exist category slug");
+			}
+			updateObject["slug"] = slug;
+		}
+
+		/** Update category in database */
+		await this.categoryRepository.update({ id }, updateObject);
+
+		return "updated successfully";
 	}
 
 	remove(id: number) {

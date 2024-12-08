@@ -8,6 +8,7 @@ import {
 	Delete,
 	UseInterceptors,
 	Query,
+	ParseIntPipe,
 } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import { CreateCategoryDto } from "./dto/create-category.dto";
@@ -36,17 +37,17 @@ export class CategoryController {
 		@Body() createCategoryDto: CreateCategoryDto
 	) {
 		/** filter client data and remove unwanted data */
-		const filteredData = plainToClass(
-			CreateCategoryDto,
-			createCategoryDto,
-			{
-				excludeExtraneousValues: true,
-			}
-		);
+		const filteredData = plainToClass(CreateCategoryDto, createCategoryDto, {
+			excludeExtraneousValues: true,
+		});
 
 		return this.categoryService.create(filteredData, image);
 	}
 
+	/**
+	 * Retrieve all categories
+	 * @param paginationDto - pagination related data
+	 */
 	@Get()
 	findAll(@Query() paginationDto: PaginationDto) {
 		/** filter client pagination data and remove unwanted data */
@@ -57,12 +58,26 @@ export class CategoryController {
 		return this.categoryService.findAll(filteredPaginationData);
 	}
 
+	/**
+	 * Update category data
+	 * @param id - category id number
+	 * @param updateCategoryDto - new data to be updated
+	 * @param image - category new image
+	 */
 	@Patch(":id")
+	@ApiConsumes(SwaggerConsumes.MULTIPART_FORM_DATA)
+	@UseInterceptors(UploadFileS3("image"))
 	update(
-		@Param("id") id: string,
+		@Param("id", ParseIntPipe) id: number,
+		@FileUploader() image: Express.Multer.File,
 		@Body() updateCategoryDto: UpdateCategoryDto
 	) {
-		return this.categoryService.update(+id, updateCategoryDto);
+		/** filter client data and remove unwanted data */
+		const filteredData = plainToClass(UpdateCategoryDto, updateCategoryDto, {
+			excludeExtraneousValues: true,
+		});
+
+		return this.categoryService.update(id, filteredData, image);
 	}
 
 	@Delete(":id")
