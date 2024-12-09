@@ -11,11 +11,6 @@ import { TokenService } from "./token.service";
 	imports: [TypeOrmModule.forFeature([UserEntity, OtpEntity])],
 	controllers: [AuthController],
 	providers: [AuthService, JwtService, TokenService],
-	exports: [
-		AuthService,
-		JwtService,
-		TokenService,
-		TypeOrmModule,
-	],
+	exports: [AuthService, JwtService, TokenService, TypeOrmModule],
 })
 export class AuthModule {}

@@ -17,6 +17,7 @@ import { TAuthResponse } from "./types/response";
 import { tokenCookieOptions } from "src/common/utils/cookie.utils";
 import { TokenService } from "./token.service";
 import { SmsIrService } from "../http/sms-ir.service";
+import { CookiesName } from "src/common/enums/cookies-name.enum";
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthService {
@@ -144,7 +145,7 @@ export class AuthService {
 		/** extract data from authentication process result */
 		const { token, code } = result;
 		/** Set a cookie in user browser ti be used in future auth processes */
-		res.cookie("OtpCookie", token, tokenCookieOptions());
+		res.cookie(CookiesName.OTP_COOKIE, token, tokenCookieOptions());
 
 		const responseData = {
 			message: "OTP code sent successfully",
@@ -165,7 +166,8 @@ export class AuthService {
 	 */
 	async checkOtp(code: string) {
 		/** Extract client's otp token from current request */
-		const token: string | undefined = this.request.signedCookies?.["OtpCookie"];
+		const token: string | undefined =
+			this.request.signedCookies?.[CookiesName.OTP_COOKIE];
 
 		/** throw error if token was undefined */
 		if (!token) {
