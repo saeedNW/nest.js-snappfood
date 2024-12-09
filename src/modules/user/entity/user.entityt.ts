@@ -17,10 +17,10 @@ export class UserEntity extends BaseTimestampedEntity {
 	@Column({ nullable: true, unique: true })
 	email: string;
 	@Column({ unique: true, nullable: true })
-	invite_code: string;
+	inviteCode: string;
 	@Column({ default: 0 })
 	score: string;
-	@Column({ default: 0 })
+	@Column({ nullable: true })
 	reagent: string;
 	@OneToMany(() => AddressEntity, (address) => address.user)
 	address: AddressEntity[];

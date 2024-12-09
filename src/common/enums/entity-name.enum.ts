@@ -3,4 +3,5 @@ export enum EntityName {
 	USER_ADDRESS = "user_address",
 	CATEGORY = "category",
 	OTP = "otp",
+	SUPPLIER = "supplier",
 }
