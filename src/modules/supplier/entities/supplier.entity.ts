@@ -1,7 +1,15 @@
 import { BaseTimestampedEntity } from "src/common/abstracts/base.entity";
 import { EntityName } from "src/common/enums/entity-name.enum";
 import { CategoryEntity } from "src/modules/category/entities/category.entity";
-import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import {
+	Column,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+} from "typeorm";
+import { SupplierOtpEntity } from "./supplier-otp.entity";
 
 @Entity(EntityName.SUPPLIER)
 export class SupplierEntity extends BaseTimestampedEntity {
@@ -26,7 +34,14 @@ export class SupplierEntity extends BaseTimestampedEntity {
 	@Column({ unique: true, nullable: true })
 	inviteCode: string;
 	@Column({ nullable: true })
-	reagent: string;
+	reagentId: number;
+	@ManyToOne(() => SupplierEntity, (supplier) => supplier.subsets)
+	reagent: SupplierEntity;
 	@OneToMany(() => SupplierEntity, (supplier) => supplier.reagent)
 	subsets: SupplierEntity[];
+	@Column({ nullable: true })
+	otpId: number;
+	@OneToOne(() => SupplierOtpEntity, (otp) => otp.supplier, { nullable: true })
+	@JoinColumn()
+	otp: SupplierOtpEntity;
 }
