@@ -6,6 +6,7 @@ import { TypeOrmConfig } from "src/config/typeorm.config";
 import { CategoryModule } from "../category/category.module";
 import { AuthModule } from "../auth/auth.module";
 import { UserModule } from "../user/user.module";
+import { CustomHttpModule } from "../http/http.module";
 
 @Module({
 	imports: [
@@ -21,6 +22,7 @@ import { UserModule } from "../user/user.module";
 		/** Register modules */
 		AuthModule,
 		UserModule,
+		CustomHttpModule,
 		CategoryModule,
 	],
 	controllers: [],

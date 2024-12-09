@@ -16,6 +16,7 @@ import { randomInt } from "crypto";
 import { TAuthResponse } from "./types/response";
 import { tokenCookieOptions } from "src/common/utils/cookie.utils";
 import { TokenService } from "./token.service";
+import { SmsIrService } from "../http/sms-ir.service";
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthService {
@@ -33,7 +34,10 @@ export class AuthService {
 		private request: Request,
 
 		/** Register token service */
-		private tokenService: TokenService
+		private tokenService: TokenService,
+
+		/** Register sms service */
+		private smsIrService: SmsIrService
 	) {}
 
 	async sendOtp(sendOtpDto: SendOtpDto, res: Response) {
@@ -55,7 +59,8 @@ export class AuthService {
 		/** Generate user's otp token */
 		const token = this.tokenService.createOtpToken({ userId: user.id });
 
-		// TODO: Send OTP code to the client's phone
+		/** Send OTP code to the client's phone */
+		await this.sendOtpSms(phone, otp.code);
 
 		/** send response to client */
 		return this.sendOtpResponse(res, { token, code: otp.code });
@@ -115,6 +120,19 @@ export class AuthService {
 		}
 
 		return otp;
+	}
+
+	/**
+	 * Send OTP code to clients phone number or email address based on auth method
+	 * @param {string} phone - The input data sent by client
+	 * @param {string} code - OTP code
+	 */
+	async sendOtpSms(phone: string, code: string) {
+		/** Send OTP code to user if application was run in production mode */
+		if (process.env?.NODE_ENV === "production") {
+			/** Send SMS to client if the authorization method was phone */
+			await this.smsIrService.sendVerificationSms(phone, code);
+		}
 	}
 
 	/**

@@ -29,5 +29,9 @@ namespace NodeJS {
 		COOKIE_SECRET: string;
 		OTP_TOKEN_SECRET: string;
 		ACCESS_TOKEN_SECRET: string;
+
+		/** SMS.ir */
+		SMS_IR_API_KEY: string;
+		SMS_IR_SEND_URL: string;
 	}
 }
