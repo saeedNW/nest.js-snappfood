@@ -21,6 +21,8 @@ import { Request, Response } from "express";
 import { TSupplierAuthResponse } from "./types/response";
 import { tokenCookieOptions } from "src/common/utils/cookie.utils";
 import { CookiesName } from "src/common/enums/cookies-name.enum";
+import { SupplementaryInformationDto } from "./dto/Supplementary.dto";
+import { SupplierStatus } from "./enum/status.enum";
 
 @Injectable({ scope: Scope.REQUEST })
 export class SupplierService {
@@ -319,5 +321,41 @@ export class SupplierService {
 			lastName: supplier.managerFamily,
 			phone: supplier.phone,
 		};
+	}
+
+	/**
+	 * update clients supplementary information
+	 * @param infoDto - Clients supplementary information
+	 */
+	async saveSupplementaryInformation(infoDto: SupplementaryInformationDto) {
+		/** Get user's id from request */
+		const { id } = this.request.user;
+
+		/** Destructure data sent by client */
+		const { email, nationalCode } = infoDto;
+
+		/** Check for duplicated national code */
+		let supplier = await this.supplierRepository.findOneBy({ nationalCode });
+		if (supplier && supplier.id !== id) {
+			throw new ConflictException("national code already used");
+		}
+
+		/** Check for duplicated email address */
+		supplier = await this.supplierRepository.findOneBy({ email });
+		if (supplier && supplier.id !== id) {
+			throw new ConflictException("email already used");
+		}
+
+		/** Update supplier's data */
+		await this.supplierRepository.update(
+			{ id },
+			{
+				email,
+				nationalCode,
+				status: SupplierStatus.SUPPLEMENTARY_INFORMATION,
+			}
+		);
+
+		return "information updated successfully";
 	}
 }

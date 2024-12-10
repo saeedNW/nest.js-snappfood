@@ -9,6 +9,8 @@ import {
 import { Response } from "express";
 import { plainToClass } from "class-transformer";
 import { SupplierSignupDto } from "./dto/supplier-signup.dto";
+import { SupplierAuthDecorator } from "src/common/decorators/auth.decorator";
+import { SupplementaryInformationDto } from "./dto/Supplementary.dto";
 
 @Controller("supplier")
 @ApiTags("Supplier")
@@ -66,5 +68,20 @@ export class SupplierController {
 		});
 
 		return this.supplierService.checkOtp(code);
+	}
+
+	/**
+	 * update clients supplementary information
+	 * @param infoDto - Clients supplementary information
+	 */
+	@Post("/supplementary-information")
+	@SupplierAuthDecorator()
+	supplementaryInformation(@Body() infoDto: SupplementaryInformationDto) {
+		/** filter client data and remove unwanted data */
+		const filteredData = plainToClass(SupplementaryInformationDto, infoDto, {
+			excludeExtraneousValues: true,
+		});
+
+		return this.supplierService.saveSupplementaryInformation(filteredData);
 	}
 }

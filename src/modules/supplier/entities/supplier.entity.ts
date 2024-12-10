@@ -10,6 +10,7 @@ import {
 	OneToOne,
 } from "typeorm";
 import { SupplierOtpEntity } from "./supplier-otp.entity";
+import { SupplierStatus } from "../enum/status.enum";
 
 @Entity(EntityName.SUPPLIER)
 export class SupplierEntity extends BaseTimestampedEntity {
@@ -23,6 +24,12 @@ export class SupplierEntity extends BaseTimestampedEntity {
 	managerFamily: string;
 	@Column()
 	storeName: string;
+	@Column({ nullable: true, default: SupplierStatus.REGISTERED })
+	status: string;
+	@Column({ nullable: true })
+	email: string;
+	@Column({ nullable: true })
+	nationalCode: string;
 	@Column({ nullable: true })
 	categoryId: number;
 	@ManyToOne(() => CategoryEntity, (category) => category.suppliers, {
