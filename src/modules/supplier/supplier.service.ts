@@ -23,6 +23,8 @@ import { tokenCookieOptions } from "src/common/utils/cookie.utils";
 import { CookiesName } from "src/common/enums/cookies-name.enum";
 import { SupplementaryInformationDto } from "./dto/Supplementary.dto";
 import { SupplierStatus } from "./enum/status.enum";
+import { DocumentsType } from "./types/documents.type";
+import { StorageService } from "../storage/storage.service";
 
 @Injectable({ scope: Scope.REQUEST })
 export class SupplierService {
@@ -46,7 +48,10 @@ export class SupplierService {
 		private supplierTokenService: SupplierTokenService,
 
 		/** Register sms service */
-		private smsIrService: SmsIrService
+		private smsIrService: SmsIrService,
+
+		/** Register cloud storage service */
+		private storageService: StorageService
 	) {}
 
 	/**
@@ -357,5 +362,45 @@ export class SupplierService {
 		);
 
 		return "information updated successfully";
+	}
+
+	/**
+	 * Upload supplier documents
+	 * @param infoDto - Document data
+	 * @param files - Documents uploaded files
+	 */
+	async uploadDocuments(files: DocumentsType) {
+		/** Get user's id from request */
+		const { id } = this.request.user;
+
+		/** Destructure files sent by client */
+		const { image, acceptedDoc } = files;
+
+		/** retrieve supplier data */
+		const supplier = await this.supplierRepository.findOneBy({ id });
+
+		/** Upload image file to cloud storage */
+		const imageResult = await this.storageService.uploadFile(
+			image[0],
+			"images"
+		);
+
+		/** Upload document file to cloud storage */
+		const docsResult = await this.storageService.uploadFile(
+			acceptedDoc[0],
+			"acceptedDoc"
+		);
+
+		/** Update supplier image and document files info */
+		if (imageResult) supplier.image = imageResult.Location;
+		if (docsResult) supplier.document = docsResult.Location;
+
+		/** Update supplier's register status to uploaded files */
+		supplier.status = SupplierStatus.UPLOADED_DOCUMENT;
+
+		/** Save suppliers data in database */
+		await this.supplierRepository.save(supplier);
+
+		return "Documents uploaded successfully";
 	}
 }

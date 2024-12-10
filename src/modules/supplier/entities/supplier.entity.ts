@@ -41,6 +41,10 @@ export class SupplierEntity extends BaseTimestampedEntity {
 	@Column({ unique: true, nullable: true })
 	inviteCode: string;
 	@Column({ nullable: true })
+	image: string;
+	@Column({ nullable: true })
+	document: string;
+	@Column({ nullable: true })
 	reagentId: number;
 	@ManyToOne(() => SupplierEntity, (supplier) => supplier.subsets)
 	reagent: SupplierEntity;

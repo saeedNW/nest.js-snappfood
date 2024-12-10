@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res } from "@nestjs/common";
+import { Controller, Post, Body, Res, Put, UseInterceptors, UploadedFiles } from "@nestjs/common";
 import { SupplierService } from "./supplier.service";
 import { ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { SwaggerConsumes } from "src/common/enums/swagger-consumes.enum";
@@ -11,6 +11,8 @@ import { plainToClass } from "class-transformer";
 import { SupplierSignupDto } from "./dto/supplier-signup.dto";
 import { SupplierAuthDecorator } from "src/common/decorators/auth.decorator";
 import { SupplementaryInformationDto } from "./dto/Supplementary.dto";
+import { UploadFileFieldsS3 } from "src/common/interceptor/file-uploader.interceptor";
+import { UploadDocsDto } from "./dto/upload-doc.dto";
 
 @Controller("supplier")
 @ApiTags("Supplier")
@@ -75,6 +77,7 @@ export class SupplierController {
 	 * @param infoDto - Clients supplementary information
 	 */
 	@Post("/supplementary-information")
+	@ApiConsumes(SwaggerConsumes.URL_ENCODED, SwaggerConsumes.JSON)
 	@SupplierAuthDecorator()
 	supplementaryInformation(@Body() infoDto: SupplementaryInformationDto) {
 		/** filter client data and remove unwanted data */
@@ -83,5 +86,23 @@ export class SupplierController {
 		});
 
 		return this.supplierService.saveSupplementaryInformation(filteredData);
+	}
+
+	/**
+	 * Upload supplier documents
+	 * @param infoDto - Document data
+	 * @param files - Documents uploaded files
+	 */
+	@Put("/upload-documents")
+	@ApiConsumes(SwaggerConsumes.MULTIPART_FORM_DATA)
+	@SupplierAuthDecorator()
+	@UseInterceptors(
+		UploadFileFieldsS3([
+			{ name: "acceptedDoc", maxCount: 1 },
+			{ name: "image", maxCount: 1 },
+		])
+	)
+	uploadDocument(@Body() infoDto: UploadDocsDto, @UploadedFiles() files: any) {
+		return this.supplierService.uploadDocuments(files);
 	}
 }
