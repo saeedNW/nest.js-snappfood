@@ -3,6 +3,7 @@ import { EntityName } from "src/common/enums/entity-name.enum";
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { AddressEntity } from "./address.entity";
 import { OtpEntity } from "./otp.entity";
+import { FeedbackEntity } from "src/modules/menu/entity/feedback.entity";
 
 @Entity(EntityName.USER)
 export class UserEntity extends BaseTimestampedEntity {
@@ -24,6 +25,8 @@ export class UserEntity extends BaseTimestampedEntity {
 	reagent: string;
 	@OneToMany(() => AddressEntity, (address) => address.user)
 	address: AddressEntity[];
+	@OneToMany(() => FeedbackEntity, (feedback) => feedback.user)
+	feedbacks: FeedbackEntity[];
 	@Column({ nullable: true })
 	otpId: number;
 	@OneToOne(() => OtpEntity, (otp) => otp.user, { nullable: true })

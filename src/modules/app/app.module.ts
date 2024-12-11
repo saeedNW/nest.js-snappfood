@@ -8,6 +8,7 @@ import { AuthModule } from "../auth/auth.module";
 import { UserModule } from "../user/user.module";
 import { CustomHttpModule } from "../http/http.module";
 import { SupplierModule } from "../supplier/supplier.module";
+import { MenuModule } from "../menu/menu.module";
 
 @Module({
 	imports: [
@@ -26,6 +27,7 @@ import { SupplierModule } from "../supplier/supplier.module";
 		CustomHttpModule,
 		CategoryModule,
 		SupplierModule,
+		MenuModule,
 	],
 	controllers: [],
 	providers: [],
