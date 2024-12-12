@@ -2,7 +2,7 @@ import { BaseEntity } from "src/common/abstracts/base.entity";
 import { EntityName } from "src/common/enums/entity-name.enum";
 import { DiscountEntity } from "src/modules/discount/entities/discount.entity";
 import { MenuEntity } from "src/modules/menu/entity/menu.entity";
-import { UserEntity } from "src/modules/user/entity/user.entityt";
+import { UserEntity } from "src/modules/user/entity/user.entity";
 import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity(EntityName.USER_BASKET)

@@ -1,7 +1,7 @@
 import { BaseTimestampedEntity } from "src/common/abstracts/base.entity";
 import { EntityName } from "src/common/enums/entity-name.enum";
 import { Column, Entity, ManyToOne } from "typeorm";
-import { UserEntity } from "./user.entityt";
+import { UserEntity } from "./user.entity";
 
 @Entity(EntityName.USER_ADDRESS)
 export class AddressEntity extends BaseTimestampedEntity {

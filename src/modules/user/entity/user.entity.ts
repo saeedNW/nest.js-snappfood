@@ -5,6 +5,8 @@ import { AddressEntity } from "./address.entity";
 import { OtpEntity } from "./otp.entity";
 import { FeedbackEntity } from "src/modules/menu/entity/feedback.entity";
 import { UserBasketEntity } from "src/modules/basket/entity/basket.entity";
+import { OrderEntity } from "src/modules/order/entity/order.entity";
+import { PaymentEntity } from "src/modules/payment/entity/payment.entity";
 
 @Entity(EntityName.USER)
 export class UserEntity extends BaseTimestampedEntity {
@@ -24,12 +26,16 @@ export class UserEntity extends BaseTimestampedEntity {
 	score: string;
 	@Column({ nullable: true })
 	reagent: string;
+	@OneToMany(() => OrderEntity, (order) => order.user)
+	orders: OrderEntity[];
 	@OneToMany(() => AddressEntity, (address) => address.user)
 	address: AddressEntity[];
 	@OneToMany(() => FeedbackEntity, (feedback) => feedback.user)
 	feedbacks: FeedbackEntity[];
 	@OneToMany(() => UserBasketEntity, (basket) => basket.user)
 	basket: UserBasketEntity[];
+	@OneToMany(() => PaymentEntity, (payment) => payment.user)
+	payments: PaymentEntity[];
 	@Column({ nullable: true })
 	otpId: number;
 	@OneToOne(() => OtpEntity, (otp) => otp.user, { nullable: true })
