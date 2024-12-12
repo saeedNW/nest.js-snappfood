@@ -9,6 +9,7 @@ import { UserModule } from "../user/user.module";
 import { CustomHttpModule } from "../http/http.module";
 import { SupplierModule } from "../supplier/supplier.module";
 import { MenuModule } from "../menu/menu.module";
+import { DiscountModule } from "../discount/discount.module";
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { MenuModule } from "../menu/menu.module";
 		CategoryModule,
 		SupplierModule,
 		MenuModule,
+		DiscountModule,
 	],
 	controllers: [],
 	providers: [],
