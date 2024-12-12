@@ -1,6 +1,7 @@
 export enum EntityName {
 	USER = "user",
 	USER_ADDRESS = "user_address",
+	USER_BASKET = "user_basket",
 	CATEGORY = "category",
 	OTP = "otp",
 	SUPPLIER = "supplier",

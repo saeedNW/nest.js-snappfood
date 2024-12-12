@@ -10,6 +10,7 @@ import { CustomHttpModule } from "../http/http.module";
 import { SupplierModule } from "../supplier/supplier.module";
 import { MenuModule } from "../menu/menu.module";
 import { DiscountModule } from "../discount/discount.module";
+import { BasketModule } from "../basket/basket.module";
 
 @Module({
 	imports: [
@@ -30,6 +31,7 @@ import { DiscountModule } from "../discount/discount.module";
 		SupplierModule,
 		MenuModule,
 		DiscountModule,
+		BasketModule,
 	],
 	controllers: [],
 	providers: [],

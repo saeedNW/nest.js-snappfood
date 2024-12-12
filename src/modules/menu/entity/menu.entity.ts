@@ -4,6 +4,7 @@ import { SupplierEntity } from "src/modules/supplier/entities/supplier.entity";
 import { EntityName } from "src/common/enums/entity-name.enum";
 import { TypeEntity } from "./type.entity";
 import { BaseEntity } from "src/common/abstracts/base.entity";
+import { UserBasketEntity } from "src/modules/basket/entity/basket.entity";
 
 @Entity(EntityName.MENU)
 export class MenuEntity extends BaseEntity {
@@ -31,6 +32,8 @@ export class MenuEntity extends BaseEntity {
 	feedbacks: FeedbackEntity[];
 	@ManyToOne(() => TypeEntity, (type) => type.items)
 	type: TypeEntity;
+	@OneToMany(() => UserBasketEntity, (basket) => basket.food)
+	baskets: UserBasketEntity[];
 	@ManyToOne(() => SupplierEntity, (supplier) => supplier.menu, {
 		onDelete: "CASCADE",
 	})

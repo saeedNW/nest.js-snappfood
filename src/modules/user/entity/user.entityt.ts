@@ -4,6 +4,7 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { AddressEntity } from "./address.entity";
 import { OtpEntity } from "./otp.entity";
 import { FeedbackEntity } from "src/modules/menu/entity/feedback.entity";
+import { UserBasketEntity } from "src/modules/basket/entity/basket.entity";
 
 @Entity(EntityName.USER)
 export class UserEntity extends BaseTimestampedEntity {
@@ -27,6 +28,8 @@ export class UserEntity extends BaseTimestampedEntity {
 	address: AddressEntity[];
 	@OneToMany(() => FeedbackEntity, (feedback) => feedback.user)
 	feedbacks: FeedbackEntity[];
+	@OneToMany(() => UserBasketEntity, (basket) => basket.user)
+	basket: UserBasketEntity[];
 	@Column({ nullable: true })
 	otpId: number;
 	@OneToOne(() => OtpEntity, (otp) => otp.user, { nullable: true })
