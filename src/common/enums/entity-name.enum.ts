@@ -10,4 +10,7 @@ export enum EntityName {
 	FEEDBACK = "feedback",
 	MENU = "menu",
 	MENU_TYPE = "menu_type",
+	ORDER = "order",
+	ORDER_ITEM = "order_ITEM",
+	PAYMENT = "payment",
 }

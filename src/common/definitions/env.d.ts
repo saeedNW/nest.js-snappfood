@@ -33,5 +33,11 @@ namespace NodeJS {
 		/** SMS.ir */
 		SMS_IR_API_KEY: string;
 		SMS_IR_SEND_URL: string;
+
+		/** Zarinpal */
+		ZARINPAL_VERIFY_URL: string;
+		ZARINPAL_REQUEST_URL: string;
+		ZARINPAL_GATEWAY_URL: string;
+		ZARINPAL_MERCHANT_ID: string;
 	}
 }

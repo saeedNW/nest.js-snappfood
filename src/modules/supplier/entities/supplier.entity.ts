@@ -13,6 +13,7 @@ import { SupplierOtpEntity } from "./supplier-otp.entity";
 import { SupplierStatus } from "../enum/status.enum";
 import { MenuEntity } from "src/modules/menu/entity/menu.entity";
 import { TypeEntity } from "src/modules/menu/entity/type.entity";
+import { OrderItemEntity } from "src/modules/order/entity/item.entity";
 
 @Entity(EntityName.SUPPLIER)
 export class SupplierEntity extends BaseTimestampedEntity {
@@ -56,6 +57,8 @@ export class SupplierEntity extends BaseTimestampedEntity {
 		onDelete: "SET NULL",
 	})
 	category: CategoryEntity;
+	@OneToMany(() => OrderItemEntity, (food) => food.supplier)
+	orders: OrderItemEntity[];
 	@Column({ nullable: true })
 	otpId: number;
 	@OneToOne(() => SupplierOtpEntity, (otp) => otp.supplier, { nullable: true })
