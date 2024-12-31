@@ -242,4 +242,3 @@ We would like to thank the following individuals who have contributed to the dev
 [**Erfan Yousefi - Supervisor and instructor of the nest.js programming course**](https://github.com/erfanyousefi/)
 
 [**Saeed Norouzi - Back-end Developer**](https://github.com/saeedNW)
-
