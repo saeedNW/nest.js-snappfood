@@ -6,11 +6,11 @@ export function TypeOrmConfig(): TypeOrmModuleOptions {
 
 	return {
 		type: "mysql",
-		port: DB_PORT,
-		host: DB_HOST,
-		username: DB_USERNAME,
-		password: DB_PASSWORD,
-		database: DB_NAME,
+		port: 3306,
+		host: "node_mysql",
+		username: "root",
+		password: "root",
+		database: "snappfood",
 		autoLoadEntities: true,
 		synchronize: true,
 	};

@@ -13,12 +13,13 @@ import { DiscountModule } from "../discount/discount.module";
 import { BasketModule } from "../basket/basket.module";
 import { OrderModule } from "../order/order.module";
 import { PaymentModule } from "../payment/payment.module";
+import { HealthModule } from "../health/health.module";
 
 @Module({
 	imports: [
-		/** Load environment variables from the specified .env file through 'ConfigModule' */
+		/** Conditionally load .env.dev file in development */
 		ConfigModule.forRoot({
-			envFilePath: resolve(".env"),
+			envFilePath: process.env.NODE_ENV !== 'production' ? resolve('./env/.env.dev') : undefined,
 			isGlobal: true,
 		}),
 
@@ -35,7 +36,8 @@ import { PaymentModule } from "../payment/payment.module";
 		DiscountModule,
 		BasketModule,
 		OrderModule,
-		PaymentModule
+		PaymentModule,
+		HealthModule
 	],
 	controllers: [],
 	providers: [],

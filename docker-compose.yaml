@@ -1,0 +1,40 @@
+services:
+  node_mysql:
+    image: mysql:latest
+    container_name: node_mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=snappfood
+      - MYSQL_USER=snappfood_user
+      - MYSQL_PASSWORD=snappfood_password
+    restart: always
+
+  node_app:
+    build:
+      context: . # Path to the directory containing the Dockerfile
+      dockerfile: Dockerfile # Name of the Dockerfile
+    container_name: nestjs-app
+    ports:
+      - "3000:3000" # Map host port 3000 to container port 3000
+    environment:
+      - NODE_ENV=production
+      # Use a file for secrets:
+      - ENV_SECRETS_FILE=/env/.env.prod
+    volumes:
+      - .:/usr/app # Mount the current directory (optional, for development)
+      - /usr/app/node_modules # Avoid overwriting node_modules in the container
+    depends_on:
+      - node_mysql
+    healthcheck:
+      test: [ "CMD", "wget", "http://localhost:3000/health", "-q", "-O", "-" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped # Automatically restart the container if it stops
+
+volumes:
+  mysql_data:
